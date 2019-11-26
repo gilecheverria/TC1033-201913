@@ -6,7 +6,9 @@
 */
 
 #include <iostream>
+// Include the class 'vector' to create dynamic lists (like those in Python)
 #include <vector>
+// Include the class for a Room
 #include "Room.hpp"
 
 using namespace std;
@@ -15,6 +17,8 @@ class Hotel {
     private:
         string name;
         int num_rooms;
+        // Create a list of objects of type Room
+        // There are no rooms assigned yet, only the list
         vector<Room> rooms;
 
         // Private method
@@ -31,15 +35,19 @@ Hotel::Hotel(string _name, int _rooms)
 {
     name = _name;
     num_rooms = _rooms;
-    // Create the list of all the rooms needed
+    // Set the list to the size required.
+    // This also creates new rooms to fill the list,
+    // and the empty constructor for the room is called for each one
     rooms.resize(num_rooms);
-    // Assign the room number to each
+    // Assign the number to each room
     for (int i=0; i<num_rooms; i++)
     {
+        // Increment the index by 1 to make it more human readable
         rooms[i].setNumber(i + 1);
     }
 }
 
+// Find the index of the next free room
 int Hotel::nextAvailable()
 {
     for (int i=0; i<num_rooms; i++)
@@ -49,6 +57,7 @@ int Hotel::nextAvailable()
             return i;
         }
     }
+    // A value of -1 means that no rooms are free
     return -1;
 }
 
@@ -58,18 +67,21 @@ bool Hotel::hasFreeRooms()
     {
         return true;
     }
+    // If the return value of 'nextAvailable' is negative, there are no rooms
     else
     {
         return false;
     }
 }
 
+// Assign a guest to the first room available
 bool Hotel::checkIn(Person _guest)
 {
     int nextRoom = nextAvailable();
 
     if (nextRoom >= 0)
     {
+        // Call the method of the Room class, to store the guest inside the room
         rooms[nextRoom].registerGuest(_guest);
         cout << "Guest: " << _guest.getName() << " assigned to room " << nextRoom << endl;
         return true;
@@ -86,15 +98,18 @@ bool Hotel::checkOut(Person _guest)
     // Look for the guest in all the rooms
     for (int i=0; i<num_rooms; i++)
     {
+        // If the person is found, set the room as available again
         if (rooms[i].getGuestName() == _guest.getName())
         {
             rooms[i].free();
             return true;
         }
     }
+    cout << "The guest " << _guest.getName() << " is not staying in this hotel" << endl;
     return false;
 }
 
+// Print the occupancy status of the hotel
 void Hotel::display()
 {
     cout << "\n== HOTEL " << name << " ==" << endl;
