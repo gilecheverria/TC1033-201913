@@ -24,12 +24,18 @@ class Hotel {
         // Private method
         int nextAvailable();
     public:
+        // Constructor
         Hotel(string _name, int _rooms);
+        // Public methods
         string getName();
         bool hasFreeRooms();
         bool checkIn(Person _guest);
         bool checkOut(Person _guest);
         bool checkOut(string guest_name);
+        // Methods for the user interaction
+        int printMenu();
+        bool takeAction(int option);
+        void userMenu();
         void display();
 };
 
@@ -121,6 +127,87 @@ bool Hotel::checkOut(string guest_name)
 bool Hotel::checkOut(Person _guest)
 {
     return checkOut(_guest.getName());
+}
+
+// Print menu and ask the user for a selection
+int Hotel::printMenu()
+{
+    int option;
+
+    // Show the options
+    cout << "Menu options:" << endl;
+    cout << "  1. Check in new guest" << endl;
+    cout << "  2. Check out a guest" << endl;
+    cout << "  3. Quit the program" << endl;
+    cout << "Select an option: ";
+    cin >> option;
+
+    return option;
+}
+
+// Handle the user selection from the menu
+// Return a bool indicating whether the program should loop again
+bool Hotel::takeAction(int option)
+{
+    if (option == 1)
+    {
+        // Ask for the details of the client
+        string name;
+        string nationality;
+        int age;
+        cout << "Enter the name of the guest: ";
+        cin >> name;
+        cout << "Enter the nationality of the guest: ";
+        cin >> nationality;
+        cout << "Enter the age of the guest: ";
+        cin >> age;
+        // Create a new Person object
+        Person guest(name, nationality, age);
+        // Register the new person in the hotel
+        if (checkIn(guest))
+        {
+            cout << "Welcome to " << name << ", " << guest.getName() << endl;
+        }
+    }
+    else if (option == 2)
+    {
+        // Ask for the client name
+        string name;
+        cout << "Enter the name of the guest: ";
+        cin >> name;
+        // See if he is in the hotel
+        if (checkOut(name))
+        {
+            cout << "Good bye " << name << "!" << endl;
+        }
+    }
+    else if (option == 3)
+    {
+        cout << "Thanks for using the Hotel program. Bye!" << endl;
+        return false;
+    }
+    else
+    {
+        cout << "Incorrect option. Try again ..." << endl;
+    }
+    return true;
+}
+
+// Function to interact with the Hotel class
+void Hotel::userMenu()
+{
+    int option;
+    bool loop = true;
+
+    while (loop)
+    {
+        // Show the current status of the hotel
+        display();
+        // Show the possible options
+        option = printMenu(); 
+        // Follow the user's request
+        loop = takeAction(option);
+    }
 }
 
 // Print the occupancy status of the hotel
